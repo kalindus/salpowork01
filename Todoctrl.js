@@ -24,9 +24,10 @@ appX.controller('TodoController', function($scope) {
 	};
 
 	$scope.contentEdit = function(x){
-		console.log($scope.items);
-		console.log($scope.items.itemName.indexOf(x));
+		/*console.log($scope.items);
+		console.log($scope.items.itemName.indexOf(x));*/
 		event.target.contentEditable = event.target.contentEditable == "false" ? "true" : "false";
+		localStorage['Item_List'] = JSON.stringify($scope.items);
 
 	};
 
@@ -42,6 +43,8 @@ appX.controller('TodoController', function($scope) {
 		if(angular.isDefined(completed)) {
 			oneItem.completed = completed;
 		}
+		localStorage['Item_List'] = JSON.stringify($scope.items);
+		
 	};
 
 	$scope.markAll = function(completed) {
