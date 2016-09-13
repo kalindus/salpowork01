@@ -1,0 +1,437 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"l",
+				"label	Tag"
+			],
+			[
+				"t",
+				"type	Attr"
+			],
+			[
+				"f",
+				"false"
+			],
+			[
+				"C",
+				"Completed"
+			],
+			[
+				"to",
+				"todo"
+			],
+			[
+				"com",
+				"completed"
+			],
+			[
+				"c",
+				"completed"
+			],
+			[
+				"ma",
+				"markall"
+			],
+			[
+				"fi",
+				"findById"
+			],
+			[
+				"Todo",
+				"TodoSchema"
+			],
+			[
+				"s",
+				"success"
+			],
+			[
+				"item",
+				"item_id"
+			],
+			[
+				"i",
+				"items"
+			],
+			[
+				"a",
+				"api"
+			],
+			[
+				"re",
+				"res"
+			],
+			[
+				"mon",
+				"mongoose"
+			],
+			[
+				"method",
+				"methodOverride"
+			],
+			[
+				"g",
+				"getElementById"
+			],
+			[
+				"d",
+				"document"
+			],
+			[
+				"body",
+				"bodyParser"
+			],
+			[
+				"res",
+				"result"
+			],
+			[
+				"b",
+				"bodyParser"
+			],
+			[
+				"r",
+				"require"
+			],
+			[
+				"p",
+				"placeholder	Attr"
+			],
+			[
+				"ac",
+				"action	Attr"
+			],
+			[
+				"o",
+				"originalTasks"
+			],
+			[
+				"for",
+				"forEach"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"one",
+				"oneTask"
+			],
+			[
+				"ti",
+				"title	Tag"
+			],
+			[
+				"h",
+				"head	Tag"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/Users/kalindu/Documents/secondTask/todo-api/app.js",
+			"settings":
+			{
+				"buffer_size": 1764,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/kalindu/Documents/secondTask/todo-api/routes/todos.js",
+			"settings":
+			{
+				"buffer_size": 998,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "<!DOCTYPE html>\n<html ng-app=\"app\">\n<head>\n  <title>ngTodo</title>\n  <link rel=\"stylesheet\" href=\"/stylesheets/style.css\"> \n  <link rel=\"stylesheet\" href=\"/stylesheets/bootstrap.min.css\"> \n</head>\n<body>\n\n<ng-view></ng-view>\n\n<!-- Libraries -->\n<script src=\"https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js\"></script>\n<script src=\"https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js\"></script>\n<script src=\"https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-resource.min.js\"></script>\n\n\n<!-- Template -->\n<script type=\"text/ng-template\" id=\"/todos.html\">\n\n<div class=\"container\">\n	<h4>ToDo Application with Node</h4>\n</div>\n\n<div class=\"container\">\n\n<div id= \"todo-form\" class=\"row\">\n\n<div class=\"col-md-3 text-center\">\n	<form id = \"additem-form\" ng-submit = \"add()\">\n		<div class=\"form-group\">\n			<input type=\"text\" ng-model=\"newTodo\" placeholder=\"Enter Item todo\">\n		</div>\n	</form>\n</div>\n\n<div class=\"col-md-3 text-center\">\n  <input id=\"mark all\" type=\"checkbox\" ng-model=\"allChecked\" ng-click=\"markall(allChecked)\">\n  <label for=\"mark all\">Mark all as completed</label>\n</div>\n\n<div class=\"col-md-3 text-center\">\n  <input type=\"text\" ng-model=\"search.name\" placeholder=\"Search\">\n</div>\n\n\n</div>\n\n<form role=\"form\">\n	<div class=\"form-group\">\n		<div id =\"List_of_Items\" class=\"jumbotron text-centre\">\n        <input type=\"checkbox\" ng-model=\"demo.completed\">\n        <label>Completed</label>\n        <input type=\"checkbox\" ng-model=\"demo.active\">\n        <label>Active</label> \n  			<ul>\n    			<li ng-repeat=\"todo in todos | filter: search |statusFilter:demo.completed:demo.active\">\n\n      				<input type=\"checkbox\" ng-model=\"todo.completed\" ng-change=\"update($index)\">\n      				<strong ng-show=\"!editing[$index]\">{{todo.name}}</strong>\n	  				  <button class=\"btn-primary btn-xs\" ng-show=\"!editing[$index]\" ng-click=\"edit($index)\">edit</button>\n\n      				<input ng-show=\"editing[$index]\" type=\"text\" ng-model=\"todo.name\">\n      				<button class=\"btn-success btn-xs\" ng-show=\"editing[$index]\" ng-click=\"update($index)\">Update</button>\n      				<button class=\"btn-warning btn-xs\" ng-show=\"editing[$index]\" ng-click=\"cancel($index)\">Cancel</button>\n      				<button class=\"btn-danger btn-xs\" ng-show=\"!editing[$index]\" ng-click=\"remove($index)\">x</button>\n   				</li>\n 			 </ul>\n 		</div>\n	</div>\n</form>\n\n</div>\n</script>\n\n\n<script>\n  angular.module('app', ['ngRoute', 'ngResource'])\n\n    //---------------\n    // Services\n    //---------------\n\n    .factory('Todos', ['$resource', function($resource){\n    	return $resource('/todos/:id', null, {\n    		'update': {method: 'PUT'}\n    	});\n    }])\n\n    //---------------\n    // Controllers\n    //---------------\n\n    .controller('TodoController', ['$scope', 'Todos', function ($scope, Todos) {\n      $scope.editing = [];\n      $scope.todos = Todos.query();\n\n      $scope.add = function(){\n      	if(!$scope.newTodo || $scope.newTodo.length < 1) return;\n      	var todo = new Todos({name: $scope.newTodo, completd: false})\n\n      	todo.$save(function(){\n      		$scope.todos.push(todo);\n      		$scope.newTodo = '';\n      	});\n      }\n\n      $scope.update = function(index){\n      	var todo = $scope.todos[index];\n      	Todos.update({id: todo._id}, todo);\n      	$scope.editing[index] = false;\n      }\n\n      $scope.markall = function(allCompleted){\n		angular.forEach($scope.todos, function(todo){\n      		todo.completed = !allCompleted;\n      		Todos.update({id: todo._id}, todo);\n      		\n      	});\n      }\n\n     $scope.edit = function(index){\n    	$scope.editing[index] = angular.copy($scope.todos[index]);\n  	 }\n\n  	 $scope.cancel = function(index){\n    	$scope.todos[index] = angular.copy($scope.editing[index]);\n    	$scope.editing[index] = false;\n  	 }\n\n\n  	 $scope.remove = function(index){\n  		var todo = $scope.todos[index];\n\n  		Todos.remove({id: todo._id}, function(){\n    	$scope.todos.splice(index, 1);\n  		});\n	 }\n\n	\n	}])\n\n   \n    .filter('statusFilter', [function(){\n      return function(data,completed,active){\n        var output = [];\n\n        if(!!completed){\n          for(var i =0; i<data.length; i++){\n            if(data[i].completed == true){\n              output.push(data[i]);\n            }\n          }\n        } else if (!!active){\n          for(var i =0; i<data.length; i++){\n            if(data[i].completed != true){\n              output.push(data[i]);\n            }\n          }\n        }else {\n          output = data;\n        }\n\n        return output;\n      }\n    }])\n   \n    //---------------\n    // Routes\n    //---------------\n\n    .config(['$routeProvider', function ($routeProvider) {\n      $routeProvider\n        .when('/', {\n          templateUrl: '/todos.html',\n          controller: 'TodoController'\n        })\n}]);\n   \n</script>\n\n</body>\n</html>",
+			"file": "index.ejs",
+			"file_size": 5908,
+			"file_write_time": 131182239650000000,
+			"settings":
+			{
+				"buffer_size": 4804,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/kalindu/Documents/secondTask",
+		"/Users/kalindu/Documents/secondTask/todo-api",
+		"/Users/kalindu/Documents/secondTask/todo-api/views"
+	],
+	"file_history":
+	[
+		"/Users/kalindu/Downloads/todo/js/controllers/todoCtrl.js",
+		"/Users/kalindu/Documents/Second_Task/public/index.html",
+		"/Users/kalindu/Documents/Second_Task/public/Todoctrl.js",
+		"/Users/kalindu/Documents/Second_Task/server.js",
+		"/Users/kalindu/Documents/secondTask/todo-api/routes/todos.js",
+		"/Users/kalindu/Documents/secondTask/todo-api/models/Todo.js",
+		"/Users/kalindu/Documents/secondTask/todo-api/app.js",
+		"/Users/kalindu/Documents/First_Assignment/Todoctrl.js",
+		"/Users/kalindu/Documents/Second_Task/index.html",
+		"/Users/kalindu/Documents/Second_Task/package.json",
+		"/Users/kalindu/Documents/Second_Task/public/main.js",
+		"/Users/kalindu/Documents/Second_Task/views/index.ejs",
+		"/Users/kalindu/Downloads/todo/index.html",
+		"/Users/kalindu/Documents/First_Assignment/index.html",
+		"/Users/kalindu/Documents/First_Assignment/bootstrap.css",
+		"/Users/kalindu/Documents/Test/index.html",
+		"/Users/kalindu/Downloads/todo/node_modules/angular/angular.js",
+		"/Users/kalindu/Downloads/todo/node_modules/angular-route/angular-route.js",
+		"/Users/kalindu/Downloads/todo/node_modules/todomvc-app-css/index.css",
+		"/Users/kalindu/Downloads/todo/node_modules/todomvc-common/base.js",
+		"/Users/kalindu/Downloads/todo/node_modules/todomvc-common/base.css",
+		"/Users/kalindu/Documents/First_Assignment/hello-node.js",
+		"/Users/kalindu/Documents/Test/main.js",
+		"/Users/kalindu/Documents/First Assignment/index.html",
+		"/Users/kalindu/Documents/First Assignment/First Assignment"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/Users/kalindu/Documents/secondTask/todo-api/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1764,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/Users/kalindu/Documents/secondTask/todo-api/routes/todos.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 998,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 13.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "index.ejs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4804,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3947,
+								3947
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 971.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Todoapp1.2-project.sublime-project",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
